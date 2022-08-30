@@ -2,7 +2,7 @@
 import os
 import disnake
 from disnake.ext import commands
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 from utils import get_mean_color_by_url, process_roll
 from requests.exceptions import HTTPError
 from invitation_message_pairs import InvitationMessagePairs
@@ -29,10 +29,15 @@ CHANNEL_DEFAULT_VOICE = config['CHANNELS']['CHANNEL_DEFAULT_VOICE']
 CHANNEL_DEFAULT_TEXT = config['CHANNELS']['CHANNEL_DEFAULT_TEXT']
 CHANNEL_DEFAULT_ANNOUNCEMENTS = config['CHANNELS']['CHANNEL_DEFAULT_ANNOUNCEMENTS']
 
+if not os.path.isdir('./imp'):
+    os.mkdir('./imp')
+    open('./imp/imp_main.json', 'a').close()
+    open('./imp/imp_campaign.json', 'a').close()
+
 imp_main = InvitationMessagePairs('./imp/imp_main.json')
 imp_campaign = InvitationMessagePairs('./imp/imp_campaign.json')
 
-load_dotenv()
+#load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 intents = disnake.Intents.all()
