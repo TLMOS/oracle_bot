@@ -1,11 +1,12 @@
-from PIL import Image
-import requests
 from io import BytesIO
 import re
 import random
+import configparser
+
+from PIL import Image
+import requests
 import numexpr as ne
 
-import configparser
 config = configparser.ConfigParser()
 config.read('config.ini', encoding='utf8')
 
@@ -64,17 +65,14 @@ def process_roll(src: str):
             rolls[-1].append(x)
         src = src[:start] + str(s) + src[end:]
         shift += start - end + len(str(s))
-    try:
-        value = ne.evaluate(src)    
-        if count == 1 and len(rolls[-1]) == 1 or count == 0:
-            res = "**Духи говорят:** {}".format(value)
-        elif count == 1:
-            res = "**Произведены броски:** `{}`\n**Итог:** `{}`".format(', '.join(map(str, rolls[-1])), value)
-        else:
-            res = "**Произведены броски:**\n"
-            for i in range(len(rolls)):
-                res += "{} : `{}`\n".format(maxs[i], ', '.join(map(str, rolls[i])))
-            res += "**Итог:** `{}`".format(value)
-        return RETURN_CODE_SUCCES, res
-    except Exception as err:
-        return RETURN_CODE_UNEXPECTED_ERROR, err
+    value = ne.evaluate(src)
+    if count == 1 and len(rolls[-1]) == 1 or count == 0:
+        res = f'**Духи говорят:** `{value}`'
+    elif count == 1:
+        res = f'**Произведены броски:** `{", ".join(map(str, rolls[-1]))}`\n**Итог:** `{value}`'
+    else:
+        res = '**Произведены броски:**\n'
+        for i, roll in enumerate(rolls):
+            res += f'{maxs[i]} : `{", ".join(map(str, roll))}`\n'
+        res += f'**Итог:** `{value}`'
+    return RETURN_CODE_SUCCES, res
