@@ -162,12 +162,15 @@ async def edit_channel(ctx, title: str, new_title: str = '', new_description: st
     if existing_channel:
         room = room_manager.get_room_by_cid(ROOM_TABLE_GENERAL, existing_channel.id)
         if room:
-            await existing_channel.edit(name=new_title)
-            embed = await create_room_card(ctx, new_title, new_description, new_logo)
-            info_channel = disnake.utils.get(gallery_category.channels, name=CHANNEL_GENERAL_GALLERY)
-            message = await info_channel.fetch_message(room.message_id)
-            await message.edit(embed=embed)
-            await ctx.edit_original_message(f'Канал **{title}** отредактиврован.')
+            if room.author_id == ctx.author.id:
+                await existing_channel.edit(name=new_title)
+                embed = await create_room_card(ctx, new_title, new_description, new_logo)
+                info_channel = disnake.utils.get(gallery_category.channels, name=CHANNEL_GENERAL_GALLERY)
+                message = await info_channel.fetch_message(room.message_id)
+                await message.edit(embed=embed)
+                await ctx.edit_original_message(f'Канал **{title}** отредактиврован.')
+            else:
+                await ctx.edit_original_message('Только создатель канала имеет право на редактирование.')
         else:
             await ctx.edit_original_message(f'Канал **{title}** не имеет карточки.')
     else:
@@ -193,12 +196,15 @@ async def edit_campaign(ctx, title: str, new_title: str = '', new_description: s
     if existing_category:
         room = room_manager.get_room_by_cid(ROOM_TABLE_CAMAPIGN, existing_category.id)
         if room:
-            await existing_category.edit(name=new_title)
-            embed = await create_room_card(ctx, new_title, new_description, new_logo)
-            info_channel = disnake.utils.get(gallery_category.channels, name=CHANNEL_CAMPAIGNS_GALLERY)
-            message = await info_channel.fetch_message(room.message_id)
-            await message.edit(embed=embed)
-            await ctx.edit_original_message(f'Кампания **{title}** отредактиврована.')
+            if room.author_id == ctx.author.id:
+                await existing_category.edit(name=new_title)
+                embed = await create_room_card(ctx, new_title, new_description, new_logo)
+                info_channel = disnake.utils.get(gallery_category.channels, name=CHANNEL_CAMPAIGNS_GALLERY)
+                message = await info_channel.fetch_message(room.message_id)
+                await message.edit(embed=embed)
+                await ctx.edit_original_message(f'Кампания **{title}** отредактиврована.')
+            else:
+                await ctx.edit_original_message('Только создатель канала имеет право на редактирование.')
         else:
             await ctx.edit_original_message(f'Канал **{title}** не имеет карточки.')
     else:
