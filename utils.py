@@ -57,7 +57,7 @@ def process_roll(src: str):
         maxs.append(max_)
         s = 0
         if n > MAX_DICES:
-            return RETURN_CODE_ERROR, f'Больше чем {MAX_DICES} гневает духов'
+            return RETURN_CODE_ERROR, f'Больше чем {MAX_DICES} костей гневают духов'
         for i in range(n):
             x = random.randint(1, max_)
             s += x
@@ -65,9 +65,9 @@ def process_roll(src: str):
         src = src[:start] + str(s) + src[end:]
         shift += start - end + len(str(s))
     try:
-        value = ne.evaluate(src)
-        if count == 1 and len(rolls[-1]) == 1:
-            res = "**Духи вычисляют:** {}".format(value)
+        value = ne.evaluate(src)    
+        if count == 1 and len(rolls[-1]) == 1 or count == 0:
+            res = "**Духи говорят:** {}".format(value)
         elif count == 1:
             res = "**Произведены броски:** `{}`\n**Итог:** `{}`".format(', '.join(map(str, rolls[-1])), value)
         else:
