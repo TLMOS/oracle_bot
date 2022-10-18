@@ -4,11 +4,13 @@ import random
 
 import disnake
 from disnake.ext import commands
-#from dotenv import load_dotenv
 from requests.exceptions import HTTPError
 
 from utils import get_mean_color_by_url, process_roll
 from room_manager import RoomManager
+
+# from dotenv import load_dotenv
+# load_dotenv()
 
 config = configparser.ConfigParser()
 config.read('config.ini', encoding='utf8')
@@ -39,7 +41,6 @@ if not os.path.isdir('./database'):
     os.mkdir('./database')
 room_manager = RoomManager('./database/oracle.db')
 
-#load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 intents = disnake.Intents.all()
@@ -80,7 +81,7 @@ async def create_channel(ctx, title: str, description: str = '', private: bool =
     channel_overwrites = {
         ctx.guild.default_role: disnake.PermissionOverwrite(read_messages=False),
         ctx.author: disnake.PermissionOverwrite(read_messages=True, manage_channels=True,
-        manage_messages=True)
+        manage_roles=True, manage_messages=True)
     }
 
     await ctx.response.defer()

@@ -18,7 +18,7 @@ MAX_ROLE_REQUEST_LENGTH = config['DICE'].getint('MAX_ROLE_REQUEST_LENGTH')
 MAX_DICES = config['DICE'].getint('MAX_DICES')
 
 def get_mean_color_by_url(url: str):
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     response.raise_for_status()
     img = Image.open(BytesIO(response.content))
     r, g, b = 0, 0, 0
@@ -46,7 +46,7 @@ def process_roll(src: str):
     count = 0
     rolls = []
     maxs = []
-    for roll in re.finditer('\d*к\d+', src):
+    for roll in re.finditer(r'\d*к\d+', src):
         count += 1
         rolls.append([])
         start, end = roll.span()
